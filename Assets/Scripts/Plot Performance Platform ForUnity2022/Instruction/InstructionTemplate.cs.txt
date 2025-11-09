@@ -1,8 +1,6 @@
 using UnityEngine;
-using Plot_Perform_System.Instruction;
+using Plot_Performance_Platform_ForUnity2022.Instruction;
 
-namespace Plot_Perform_System.Instruction
-{
 
 public class #InstrParamTemplate#: InstrParam
 {
@@ -21,6 +19,4 @@ public class #InstrExecuteTemplate#: InstrExecute
     {
 
     }
-}
-
 }

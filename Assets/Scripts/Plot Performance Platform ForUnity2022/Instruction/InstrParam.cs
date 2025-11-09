@@ -29,14 +29,17 @@ public class InstrParam
     protected Dictionary<string, JsonElement>? ExtensionData { get; set; } = new();
 
     #region Print
-    public static void Print(InstrParam instrParam)
+
+    public static string PrintString(InstrParam instrParam)
     {
-        _printer.Print(instrParam);
+        return _printer.PrintString(instrParam);
     }
+
     #endregion
 
     // 序列化部分 ---------------
     #region JsonSerialize
+
     public static string Serialize(InstrParam instrParam)
     {
         return _serializer.Serialize(instrParam);
@@ -50,31 +53,37 @@ public class InstrParam
 
     public static InstrParam Convert(InstrParam instrParam)
     {
-        Debug.Log($"Start to Convert: {instrParam.Name}");
         string jsonString = JsonSerializer.Serialize(instrParam);
         string typeName = instrParam.Name;
-
-        Debug.Log(typeName);
 
         // 确保类型名称包含命名空间
         if (!typeName.Contains("Plot_Performance_Platform_ForUnity2022.Instruction."))
         {
             typeName = "Plot_Performance_Platform_ForUnity2022.Instruction." + typeName;
-            Debug.Log(typeName);
         }
 
         // 从当前程序集查找类型
         Type type = Type.GetType(typeName) ?? Assembly.GetExecutingAssembly().GetType(typeName);
-
-        Debug.Log($"Find Type :{type.FullName}");
 
         if (type == null)
         {
             throw new InvalidOperationException($"Type '{typeName}' not found.");
         }
 
+        Debug.Log($"Find Type :{type.Name}");
+
         return JsonSerializer.Deserialize(jsonString, type) as InstrParam;
     }
+
+    #endregion
+
+    #region CheckValid
+
+    // private bool CheckValid()
+    // {
+    //
+    // }
+
     #endregion
 }
 }

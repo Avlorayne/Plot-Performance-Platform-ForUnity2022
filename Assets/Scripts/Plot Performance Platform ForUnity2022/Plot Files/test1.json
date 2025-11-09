@@ -8,5 +8,15 @@
   "Name": "CPT112Param",
   "Description": "CPT112Param Description",
   "CoexistingQuantity": 1
+},
+{
+  "Name": "CPTParam",
+  "Description": "CPTParam Description",
+  "CoexistingQuantity": 1
+},
+{
+  "Name": "CPT112Param",
+  "Description": "CPT112Param Description",
+  "CoexistingQuantity": 1
 }
 ]

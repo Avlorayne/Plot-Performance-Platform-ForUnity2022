@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using Plot_Performance_Platform_ForUnity2022.Instruction;
 using UnityEditor;
@@ -34,12 +35,6 @@ namespace Plot_Performance_Platform_ForUnity2022.Controller
 
         void Serialize()
         {
-            CPTParam cpt = new  CPTParam();
-            instrList.Add(cpt);
-            CPT112Param cpt2 = new  CPT112Param();
-            instrList.Add(cpt2);
-
-            instrList.Print();
             string json = instrList.Serialize();
 
             string path = AssetDatabase.GetAssetPath(plotJson);

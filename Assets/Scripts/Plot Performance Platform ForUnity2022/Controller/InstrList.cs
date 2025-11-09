@@ -7,13 +7,21 @@ using UnityEngine;
 
 namespace Plot_Performance_Platform_ForUnity2022.Controller
 {
-    public class InstrList: List<InstrParam>
+    public class InstrList
     {
+        [SerializeField]
+        private List<InstrParam> _instrParams = new List<InstrParam>();
+
+        public InstrParam this[int index]
+        {
+            get => _instrParams[index];
+            set => _instrParams[index] = value;
+        }
         public string Serialize()
         {
             StringBuilder jsonBuilder = new StringBuilder();
             jsonBuilder.Append("[\n");
-            foreach (var instrParam in this)
+            foreach (var instrParam in _instrParams)
             {
                 jsonBuilder.Append(InstrParam.Serialize(instrParam)+",\n");
             }
@@ -25,7 +33,7 @@ namespace Plot_Performance_Platform_ForUnity2022.Controller
 
         public void Deserialize(string jsonString)
         {
-            this.Clear();
+            _instrParams.Clear();
 
             // 添加输入验证
             if (string.IsNullOrWhiteSpace(jsonString))
@@ -36,7 +44,7 @@ namespace Plot_Performance_Platform_ForUnity2022.Controller
 
             // 清理字符串：移除 BOM 和空白字符
             string cleanJson = jsonString.Trim('\uFEFF', ' ', '\t', '\n', '\r');
-            Debug.Log(@$"cleanJson:
+            Debug.Log(@$"Plot Json:
 {cleanJson}");
 
             if (string.IsNullOrEmpty(cleanJson))
@@ -54,7 +62,7 @@ namespace Plot_Performance_Platform_ForUnity2022.Controller
 
             try
             {
-                Debug.Log("Start to Deserialize:");
+                Debug.Log("Start to Deserialize:-------------------------------------------------");
                 List<InstrParam> list = JsonSerializer.Deserialize<List<InstrParam>>(cleanJson);
 
                 if (list == null)
@@ -63,15 +71,13 @@ namespace Plot_Performance_Platform_ForUnity2022.Controller
                     return;
                 }
 
-                Debug.Log("Deserialize End.");
-
                 foreach (var instrParam in list)
                 {
                     InstrParam convert = InstrParam.Convert(instrParam);
-                    this.Add(convert);
+                    _instrParams.Add(convert);
                 }
 
-                Debug.Log($"Successfully deserialized {list.Count} items");
+                Debug.Log($"Successfully deserialized {list.Count} items--------------------------");
             }
             catch (JsonException ex)
             {
@@ -86,10 +92,18 @@ namespace Plot_Performance_Platform_ForUnity2022.Controller
 
         public void Print()
         {
-            foreach (var instParam in this)
+            Debug.Log($"{this.GetType().Name}:------------------------------------------------");
+            // foreach (var instParam in this)
+            // {
+            //     InstrParam.Print(instParam);
+            // }
+            for (int i = 0; i < _instrParams.Count; i++)
             {
-                InstrParam.Print(instParam);
+                Debug.Log($"{i}: {InstrParam.PrintString(_instrParams[i])}");
             }
+            Debug.Log($"{this.GetType().Name} In total {_instrParams.Count} items---------------------");
         }
+
+        public List<InstrParam> Content => _instrParams;
     }
 }
