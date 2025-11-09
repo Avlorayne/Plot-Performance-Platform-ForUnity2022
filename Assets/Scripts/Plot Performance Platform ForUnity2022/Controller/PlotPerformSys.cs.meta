@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: c1b66291367123d4aadb4bf3d1a57b52
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - plotJson: {instanceID: 0}
+  - saveButton: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
