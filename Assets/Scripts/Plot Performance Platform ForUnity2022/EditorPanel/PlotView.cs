@@ -34,7 +34,7 @@ public class ParamForView
 public class PlotView
 {
     private IPrinter _printer = new ReflectionPrinter();
-    private InstrList instrList { get; set; }
+    private FrameList instrList { get; set; }
 
     // 类型和参数的注册表
     Dictionary<Type, ParamForView[]> paramDict = new ();

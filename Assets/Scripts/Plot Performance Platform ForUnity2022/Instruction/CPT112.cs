@@ -5,6 +5,8 @@ namespace Plot_Performance_Platform_ForUnity2022.Instruction
         public override string Name { get; set; } = "CPT112Param";
         public override string Description { get; set; } = "CPT112Param Description";
         public override int CoexistingQuantity { get; set; } = 1;
+
+        public int sd = 0;
     }
 
     public class CPT112Execute: InstrExecute

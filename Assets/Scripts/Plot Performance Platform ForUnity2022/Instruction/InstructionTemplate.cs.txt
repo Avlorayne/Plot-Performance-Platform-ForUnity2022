@@ -1,22 +1,24 @@
 using UnityEngine;
 using Plot_Performance_Platform_ForUnity2022.Instruction;
 
-
-public class #InstrParamTemplate#: InstrParam
+namespace Plot_Performance_Platform_ForUnity2022.Instruction
 {
-    #region "These Properties MUSTn't Be Changed!"
-    public override string Name { get; set; } = "#InstrParamTemplate#";
-    public override string Description { get; set; } = "#InstrParamTemplate# Description";
-    #endregion
-
-    public override int CoexistingQuantity { get; set; } = 1;
-}
-
-public class #InstrExecuteTemplate#: InstrExecute
-{
-    // 执行指令
-    public override void Exeute()
+    public class #InstrParamTemplate#: InstrParam
     {
+        #region "These Properties MUSTn't Be Changed!"
+        public override string Name { get; set; } = "#InstrParamTemplate#";
+        public override string Description { get; set; } = "#InstrParamTemplate# Description";
+        #endregion
 
+        public override int CoexistingQuantity { get; set; } = 1;
+    }
+
+    public class #InstrExecuteTemplate#: InstrExecute
+    {
+        // 执行指令
+        public override void Exeute()
+        {
+
+        }
     }
 }

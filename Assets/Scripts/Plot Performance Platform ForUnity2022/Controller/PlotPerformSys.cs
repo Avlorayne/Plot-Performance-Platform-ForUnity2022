@@ -9,37 +9,34 @@ namespace Plot_Performance_Platform_ForUnity2022.Controller
 {
     public class PlotPerformSys : MonoBehaviour
     {
-        public InstrList instrList =  new InstrList();
+        public FrameList frameList = new FrameList();
         public TextAsset plotJson;
-
         public Button saveButton;
 
-        // Start is called before the first frame update
         void Start()
         {
-            DeSerialize();
+            // 使用新的 Frame 封装
+            frameList.Add(new InstrParam[]{new CPT112Param(), new CPTParam()});
+            frameList.Add(new InstrParam[]{new EPRParam()});
+            frameList.Print();
         }
 
-        // Update is called once per frame
         void Update()
         {
-
         }
 
         void DeSerialize()
         {
             string json = plotJson.text.Trim('\uFEFF');
-            instrList.Deserialize(json);
-            instrList.Print();
+            frameList.Deserialize(json);
+            frameList.Print();
         }
 
         void Serialize()
         {
-            string json = instrList.Serialize();
-
+            string json = frameList.Serialize();
             string path = AssetDatabase.GetAssetPath(plotJson);
             File.WriteAllText(path, json);
-
             Debug.Log($"JSON File: \n{json}");
         }
 
