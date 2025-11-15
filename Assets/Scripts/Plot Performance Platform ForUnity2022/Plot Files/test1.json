@@ -11,7 +11,8 @@
           "dialogue": {
             "Name": "name",
             "Sentence": "sentence"
-          }
+          },
+          "IsCanBeSkipped": false
         }
       ]
     }

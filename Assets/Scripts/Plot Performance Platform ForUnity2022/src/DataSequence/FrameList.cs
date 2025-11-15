@@ -51,14 +51,14 @@ namespace Plot_Performance_Platform_ForUnity2022.src.DataSequence
                 replacing = "[" + string.Join(",", frameJsonStrings) + "]";
             }
             Debug.Log(
-                @$"FrameList Serialize
+                @$"[FrameList.Serialize]
 jsonStrng: {JsonPrettyPrinter.Format(json)}
 replaced: {JsonPrettyPrinter.Format(replaced)}
 replacing: {JsonPrettyPrinter.Format(replacing)}");
 
             string result = json.Replace(replaced, replacing);
 
-            Debug.Log($"FrameList Serialize\nresult: {JsonPrettyPrinter.Format(result)}");
+            Debug.Log($"[FrameList.Serialize]result: {JsonPrettyPrinter.Format(result)}");
 
             return JsonPrettyPrinter.Format(result);
         }
@@ -71,16 +71,16 @@ replacing: {JsonPrettyPrinter.Format(replacing)}");
             #region JSON Check
             if (string.IsNullOrWhiteSpace(jsonString))
             {
-                Debug.LogError("JSON string is null or empty");
+                Debug.LogError("[FrameList.Deserialize]JSON string is null or empty");
                 return;
             }
 
             string cleanJson = jsonString.Trim('\uFEFF', ' ', '\t', '\n', '\r');
-            Debug.Log($"Plot Json:\n{JsonPrettyPrinter.FormatWithColor(cleanJson)}");
+            Debug.Log($"[FrameList.Deserialize]Plot Json:\n{JsonPrettyPrinter.FormatWithColor(cleanJson)}");
 
             if (string.IsNullOrEmpty(cleanJson))
             {
-                Debug.LogError("JSON string contains only whitespace");
+                Debug.LogError("[FrameList.Deserialize]JSON string contains only whitespace");
                 return;
             }
             #endregion
@@ -95,18 +95,18 @@ replacing: {JsonPrettyPrinter.Format(replacing)}");
 
                 if (rawFrameList == null)
                 {
-                    Debug.Log("Deserialization failed - null result");
+                    Debug.Log("[FrameList.Deserialize] failed - null result");
                     return;
                 }
             }
             catch (JsonException ex)
             {
-                Debug.LogError($"JSON deserialization error: {ex.Message}");
-                Debug.LogError($"JSON content: {cleanJson}");
+                Debug.LogError($"[FrameList.Deserialize]JSON deserialization error: {ex.Message}");
+                Debug.LogError($"[FrameList.Deserialize]JSON content: {cleanJson}");
             }
             catch (Exception ex)
             {
-                Debug.LogError($"Unexpected error during deserialization: {ex.Message}");
+                Debug.LogError($"[FrameList.Deserialize]Unexpected error during deserialization: {ex.Message}");
             }
             #endregion
             // -------------------------------------------------
@@ -125,12 +125,12 @@ replacing: {JsonPrettyPrinter.Format(replacing)}");
                     _frames.Add(frame);
                 }
 
-                Debug.Log($"Successfully deserialized {rawFrameList.Count} items {DEVIDE_CHAR}".Truncate(MAX_PRINT));
+                Debug.Log($"[FrameList.Deserialize]Successfully deserialized {rawFrameList.Count} items {DEVIDE_CHAR}".Truncate(MAX_PRINT));
 
             }
             catch (Exception ex)
             {
-                Debug.LogError($"Unexpected error during deserialization:\n{ex.Message}");
+                Debug.LogError($"[FrameList.Deserialize]Unexpected error during deserialization:\n{ex.Message}");
             }
             #endregion
         }

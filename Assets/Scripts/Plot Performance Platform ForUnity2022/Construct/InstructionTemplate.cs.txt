@@ -16,6 +16,7 @@ namespace Plot_Performance_Platform_ForUnity2022.Instruction
         public override string Description { get; protected set; } = "#InstrParamTemplate# Description";
         public override bool IsCanCoexist { get;  set; } = false;
         public override bool IsRelese { get; set; } = false;
+        public override bool IsCanBeSkipped { get; set; } = false;
         #endregion
     }
 

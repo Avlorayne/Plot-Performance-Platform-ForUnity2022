@@ -14,16 +14,44 @@ public class InstrParam
 {
     private static ISerializer _serializer = new ReflectionSerializer();
     private static IPrinter _printer = new ReflectionPrinter();
-    public static string _namespace = "Plot_Performance_Platform_ForUnity2022.Instruction.";
+    public static string Namespace = "Plot_Performance_Platform_ForUnity2022.Instruction.";
 
     #region Const
     [JsonInclude] public virtual string Name { get; protected set; } = nameof(InstrParam);
-    [JsonInclude] public virtual string ExecutorType { get; protected set; } = nameof(InstrExecute);
+    [JsonInclude] protected virtual string _ExecutorType { get; set; } = nameof(InstrExecute);
+
+    [JsonIgnore]
+    public Type ExecutorType
+    {
+        get
+        {
+            string typeName = _ExecutorType;
+            // 确保类型名称包含命名空间
+            if (!typeName.Contains(Namespace))
+            {
+                typeName = Namespace + typeName;
+            }
+
+            // 从当前程序集查找类型
+            Type type = Type.GetType(typeName) ?? Assembly.GetExecutingAssembly().GetType(typeName);
+
+            if (type == null)
+            {
+                Debug.Log($"[InstrParam.ExecutorType]Can't find executor type {_ExecutorType}");
+            }
+            Debug.Log($"[InstrParam.ExecutorType]Find  executor type {type.Name}");
+            return type;
+        }
+        protected set{ }
+    }
+
     #endregion
 
     [JsonInclude] public virtual string Description { get; protected set; } = "Basic Description";
     [JsonInclude] public virtual bool IsCanCoexist { get; set; } = false;
     [JsonInclude] public virtual bool IsRelese { get; set; } = false;
+
+    [JsonInclude] public virtual bool IsCanBeSkipped { get; set; } = false;
 
     [JsonInclude] [JsonExtensionData] [CanBeNull] protected Dictionary<string, JsonElement> ExtensionData { get; set; } = new();
 
@@ -53,15 +81,15 @@ public class InstrParam
 
     public static InstrParam Convert(InstrParam instrParam)
     {
-        Debug.Log($"converted:\n{_printer.PrintString(instrParam)}");
+        Debug.Log($"[InstrParam.Convert]Json String\n{_printer.PrintString(instrParam)}");
 
         string jsonString = JsonSerializer.Serialize(instrParam);
         string typeName = instrParam.Name;
 
         // 确保类型名称包含命名空间
-        if (!typeName.Contains(_namespace))
+        if (!typeName.Contains(Namespace))
         {
-            typeName = _namespace + typeName;
+            typeName = Namespace + typeName;
         }
 
         // 从当前程序集查找类型
@@ -72,7 +100,7 @@ public class InstrParam
             throw new InvalidOperationException($"Type '{typeName}' not found.");
         }
 
-        Debug.Log($"Find Type :{type.Name}");
+        Debug.Log($"[InstrParam.Convert]Find Type :{type.Name}");
 
         return JsonSerializer.Deserialize(jsonString,
             type,

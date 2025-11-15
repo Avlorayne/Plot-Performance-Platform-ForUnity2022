@@ -51,14 +51,14 @@ namespace Plot_Performance_Platform_ForUnity2022.src.DataSequence
                 replacing =  "[" + string.Join(",", instructionJsonStrings) + "]";
             }
             Debug.Log(
-                @$"Frame Serialize
+                @$"[Frame.Serialize]
 jsonStrng: {JsonPrettyPrinter.Format(json)}
 replaced: {JsonPrettyPrinter.Format(replaced)}
 replacing: {JsonPrettyPrinter.Format(replacing)}");
 
             string result = json.Replace(replaced, replacing);
 
-            Debug.Log($"Frame Serialize\nresult: {JsonPrettyPrinter.Format(result)}");
+            Debug.Log($"[Frame.Serialize]result: {JsonPrettyPrinter.Format(result)}");
 
             return result;
         }
@@ -86,7 +86,7 @@ replacing: {JsonPrettyPrinter.Format(replacing)}");
             }
             catch (System.Text.Json.JsonException ex)
             {
-                Debug.LogError($"Frame deserialization error: {ex.Message}");
+                Debug.LogError($"[Frame.Deserialize]Frame deserialization error: {ex.Message}");
             }
         }
         #endregion
@@ -107,7 +107,7 @@ replacing: {JsonPrettyPrinter.Format(replacing)}");
 
         public void Print()
         {
-            Debug.Log(PrintString());
+            Debug.Log($"[Frame]{PrintString()}");
         }
         #endregion
 

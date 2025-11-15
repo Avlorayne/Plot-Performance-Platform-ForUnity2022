@@ -21,8 +21,6 @@ public class ScriptTemplateGenerator
     {
         GetPath();
 
-        Debug.Log($"{folderPath}\n{templateFile}");
-
         template = File.ReadAllText(templateFile);
 
         template = template.Replace("#InstrParamTemplate#", $"{scriptName}Param");
@@ -46,7 +44,7 @@ public class ScriptTemplateGenerator
         if (!result.IsValid)
         {
             foreach (string error in result.Errors)
-                Debug.Log($"  - {error}");
+                Debug.Log($"[ScriptTemplateGenerator]  - {error}");
             return false;
         }
 
@@ -59,7 +57,7 @@ public class ScriptTemplateGenerator
             // 检查文件是否已存在
             if (File.Exists(scriptPath))
             {
-                Debug.LogWarning($"文件 {this.scriptName}.cs 已存在！");
+                Debug.LogWarning($"[ScriptTemplateGenerator]文件 {this.scriptName}.cs 已存在！");
                 return false;
             }
 
@@ -72,18 +70,18 @@ public class ScriptTemplateGenerator
             // 然后检查文件是否存在
             if (File.Exists(scriptPath))
             {
-                Debug.Log($"{this.scriptName}.cs 文件创建成功！");
+                Debug.Log($"[ScriptTemplateGenerator]{this.scriptName}.cs 文件创建成功！");
                 return true;
             }
             else
             {
-                Debug.Log($"文件创建后检查失败");
+                Debug.Log($"[ScriptTemplateGenerator]文件创建后检查失败");
                 return false;
             }
         }
         catch (Exception ex)
         {
-            Debug.Log($"创建文件失败: {ex.Message}");
+            Debug.Log($"[ScriptTemplateGenerator]创建文件失败: {ex.Message}");
             return false;
         }
     }

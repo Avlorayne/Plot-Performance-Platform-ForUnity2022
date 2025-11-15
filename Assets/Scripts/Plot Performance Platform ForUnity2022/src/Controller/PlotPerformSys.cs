@@ -1,6 +1,7 @@
 using System.IO;
 using Plot_Performance_Platform_ForUnity2022.Construct;
 using Plot_Performance_Platform_ForUnity2022.Instruction;
+using Plot_Performance_Platform_ForUnity2022.src.Allocate;
 using Plot_Performance_Platform_ForUnity2022.src.DataSequence;
 using UnityEditor;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Controller
     public class PlotPerformSys : MonoBehaviour
     {
         public FrameList frameList = new FrameList();
+        public FrameExecuteList FrameExecuteList;
         public TextAsset plotJson;
         public Button saveButton;
 
@@ -19,7 +21,9 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Controller
             // 使用新的 Frame 封装
             frameList.Add(new InstrParam[]{new TypeDialogueParam(new Dialogue("name","sentence"))});
             frameList.Print();
-            Serialize();
+            // Serialize();
+            FrameExecuteList = new FrameExecuteList(frameList);
+            FrameExecuteList.Print();
         }
 
         void Update()
