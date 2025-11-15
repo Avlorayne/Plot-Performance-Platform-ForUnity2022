@@ -8,7 +8,7 @@ using Plot_Performance_Platform_ForUnity2022.Construct;
 using Plot_Performance_Platform_ForUnity2022.Utility;
 using UnityEngine;
 
-namespace Plot_Performance_Platform_ForUnity2022.DataSequence
+namespace Plot_Performance_Platform_ForUnity2022.src.DataSequence
 {
     [Serializable]
     public class Frame

@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Plot_Performance_Platform_ForUnity2022.EditorPanel
+namespace Plot_Performance_Platform_ForUnity2022.src.EditorPanel
 {
 public class PlotEditorWindow: EditorWindow
 {

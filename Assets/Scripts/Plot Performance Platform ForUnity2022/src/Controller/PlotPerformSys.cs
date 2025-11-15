@@ -1,13 +1,12 @@
-using System.Collections.Generic;
 using System.IO;
 using Plot_Performance_Platform_ForUnity2022.Construct;
-using Plot_Performance_Platform_ForUnity2022.DataSequence;
 using Plot_Performance_Platform_ForUnity2022.Instruction;
+using Plot_Performance_Platform_ForUnity2022.src.DataSequence;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Plot_Performance_Platform_ForUnity2022.Controller
+namespace Plot_Performance_Platform_ForUnity2022.src.Controller
 {
     public class PlotPerformSys : MonoBehaviour
     {
