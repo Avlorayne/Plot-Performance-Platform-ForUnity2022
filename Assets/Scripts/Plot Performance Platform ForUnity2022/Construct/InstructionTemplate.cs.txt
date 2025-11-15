@@ -1,0 +1,34 @@
+using System;
+using UnityEngine;
+using Plot_Performance_Platform_ForUnity2022.Construct;
+
+namespace Plot_Performance_Platform_ForUnity2022.Instruction
+{
+    [Serializable]
+    public class #InstrParamTemplate#: InstrParam
+    {
+        #region "These Properties MUSTn't Be Changed!"
+        public override string Name { get; protected set; } = nameof(#InstrParamTemplate#);
+        public override string ExecutorType { get; protected set; } = nameof(#InstrExecuteTemplate#);
+        #endregion
+
+        #region Basic Property
+        public override string Description { get; protected set; } = "#InstrParamTemplate# Description";
+        public override bool IsCanCoexist { get;  set; } = false;
+        public override bool IsRelese { get; set; } = false;
+        #endregion
+    }
+
+    public class #InstrExecuteTemplate#: InstrExecute
+    {
+        public override void Execute()
+        {
+
+        }
+
+        public override void Interrupt()
+        {
+
+        }
+    }
+}

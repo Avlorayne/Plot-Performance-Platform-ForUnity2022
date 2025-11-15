@@ -3,30 +3,30 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 using Plot_Performance_Platform_ForUnity2022.Utility;
 using UnityEngine;
 
-namespace Plot_Performance_Platform_ForUnity2022.Instruction
+namespace Plot_Performance_Platform_ForUnity2022.Construct
 {
+[Serializable]
 public class InstrParam
 {
     private static ISerializer _serializer = new ReflectionSerializer();
     private static IPrinter _printer = new ReflectionPrinter();
+    public static string _namespace = "Plot_Performance_Platform_ForUnity2022.Instruction.";
 
-    public virtual string Name { get; set; } = "SerializeJson.InstrParam";
-    // {
-    //     get => throw new  NotImplementedException("Name must be implemented!\n指令名必须被重写");
-    //     set => throw new  NotImplementedException("Name must be implemented!\n指令名必须被重写");
-    // }
-    public virtual string Description { get; set; } = "Basic Description";
-    // {
-    //     get => throw new  NotImplementedException("Description must be implemented!\n指令描述必须被重写");
-    //     set => throw new  NotImplementedException("Description must be implemented!\n指令描述必须被重写");
-    // }
-    // 共存数量
-    public virtual int CoexistingQuantity { get; set; } = 1;
-    [JsonExtensionData]
-    protected Dictionary<string, JsonElement>? ExtensionData { get; set; } = new();
+    #region Const
+    [JsonInclude] public virtual string Name { get; protected set; } = nameof(InstrParam);
+    [JsonInclude] public virtual string ExecutorType { get; protected set; } = nameof(InstrExecute);
+    #endregion
+
+    [JsonInclude] public virtual string Description { get; protected set; } = "Basic Description";
+    [JsonInclude] public virtual bool IsCanCoexist { get; set; } = false;
+    [JsonInclude] public virtual bool IsRelese { get; set; } = false;
+
+    [JsonInclude] [JsonExtensionData] [CanBeNull] protected Dictionary<string, JsonElement> ExtensionData { get; set; } = new();
+
 
     #region Print
 
@@ -53,13 +53,15 @@ public class InstrParam
 
     public static InstrParam Convert(InstrParam instrParam)
     {
+        Debug.Log($"converted:\n{_printer.PrintString(instrParam)}");
+
         string jsonString = JsonSerializer.Serialize(instrParam);
         string typeName = instrParam.Name;
 
         // 确保类型名称包含命名空间
-        if (!typeName.Contains("Plot_Performance_Platform_ForUnity2022.Instruction."))
+        if (!typeName.Contains(_namespace))
         {
-            typeName = "Plot_Performance_Platform_ForUnity2022.Instruction." + typeName;
+            typeName = _namespace + typeName;
         }
 
         // 从当前程序集查找类型
@@ -72,7 +74,14 @@ public class InstrParam
 
         Debug.Log($"Find Type :{type.Name}");
 
-        return JsonSerializer.Deserialize(jsonString, type) as InstrParam;
+        return JsonSerializer.Deserialize(jsonString,
+            type,
+            new JsonSerializerOptions
+            {
+                IncludeFields = true
+            }
+            )
+            as InstrParam;
     }
 
     #endregion

@@ -1,25 +1,43 @@
 using System;
 using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Plot_Performance_Platform_ForUnity2022.Utility;
 using UnityEditor;
 using UnityEngine;
 
-namespace Plot_Performance_Platform_ForUnity2022.EditorPanel
+namespace Plot_Performance_Platform_ForUnity2022.Construct
 {
 public class ScriptTemplateGenerator
 {
-    private static string templateFile = "Assets/Scripts/Plot Performance Platform ForUnity2022/Instruction/InstructionTemplate.cs.txt";
-    private static string folderPath = "Assets/Scripts/Plot Performance Platform ForUnity2022/Instruction/";
+    private static string fileStorePath =
+        "Assets/Scripts/Plot Performance Platform ForUnity2022/Plot Files/ScriptTemplateGenerator.json";
+    [JsonInclude] private string templateFile;
+    [JsonInclude] private string folderPath;
 
     private string template;
     private string scriptName;
     private void ReadTemplate()
     {
+        GetPath();
+
+        Debug.Log($"{folderPath}\n{templateFile}");
+
         template = File.ReadAllText(templateFile);
 
         template = template.Replace("#InstrParamTemplate#", $"{scriptName}Param");
         template = template.Replace("#InstrExecuteTemplate#", $"{scriptName}Execute");
     }
+
+    private void GetPath()
+    {
+        string fileStoreJson = File.ReadAllText(fileStorePath);
+        var scriptTemplateGenerator = JsonSerializer.Deserialize<ScriptTemplateGenerator>(fileStoreJson);
+
+        this.templateFile = scriptTemplateGenerator.templateFile;
+        this.folderPath = scriptTemplateGenerator.folderPath;
+    }
+
 
     public bool CreateScript(string scriptName)
     {

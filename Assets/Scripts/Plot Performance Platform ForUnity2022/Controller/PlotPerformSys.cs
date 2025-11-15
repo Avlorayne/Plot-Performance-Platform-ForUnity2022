@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
+using Plot_Performance_Platform_ForUnity2022.Construct;
+using Plot_Performance_Platform_ForUnity2022.DataSequence;
 using Plot_Performance_Platform_ForUnity2022.Instruction;
 using UnityEditor;
 using UnityEngine;
@@ -16,9 +18,9 @@ namespace Plot_Performance_Platform_ForUnity2022.Controller
         void Start()
         {
             // 使用新的 Frame 封装
-            frameList.Add(new InstrParam[]{new CPT112Param(), new CPTParam()});
-            frameList.Add(new InstrParam[]{new EPRParam()});
+            frameList.Add(new InstrParam[]{new TypeDialogueParam(new Dialogue("name","sentence"))});
             frameList.Print();
+            Serialize();
         }
 
         void Update()
@@ -37,7 +39,7 @@ namespace Plot_Performance_Platform_ForUnity2022.Controller
             string json = frameList.Serialize();
             string path = AssetDatabase.GetAssetPath(plotJson);
             File.WriteAllText(path, json);
-            Debug.Log($"JSON File: \n{json}");
+            AssetDatabase.Refresh();
         }
 
         public void ButtonSave()

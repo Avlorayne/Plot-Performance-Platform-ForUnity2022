@@ -2,20 +2,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Plot_Performance_Platform_ForUnity2022.Instruction;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Plot_Performance_Platform_ForUnity2022.Construct;
+using Plot_Performance_Platform_ForUnity2022.Utility;
 using UnityEngine;
 
-namespace Plot_Performance_Platform_ForUnity2022.Controller
+namespace Plot_Performance_Platform_ForUnity2022.DataSequence
 {
     [Serializable]
     public class Frame
     {
-        private List<InstrParam> _instructions = new List<InstrParam>();
+        [JsonInclude] private List<InstrParam> _instructions = new List<InstrParam>();
 
         #region Properties and Methods
-        public List<InstrParam> Instructions => _instructions;
-
-        public int Count => _instructions.Count;
+        [JsonIgnore] public List<InstrParam> Content => _instructions;
+        [JsonIgnore] public int Count => _instructions.Count;
 
         public InstrParam this[int index]
         {
@@ -34,11 +36,31 @@ namespace Plot_Performance_Platform_ForUnity2022.Controller
         #region Serialization
         public string Serialize()
         {
-            if (_instructions == null || _instructions.Count == 0)
-                return "[]";
+            string json = JsonSerializer.Serialize(this);
+            string replaced = JsonSerializer.Serialize(_instructions);
 
-            var instructionJsonStrings = _instructions.Select(InstrParam.Serialize);
-            return "[" + string.Join(",", instructionJsonStrings) + "]";
+            string replacing;
+
+            if (_instructions == null || _instructions.Count == 0)
+            {
+                replacing =  "[]";
+            }
+            else
+            {
+                var instructionJsonStrings = _instructions.Select(instr => InstrParam.Serialize(instr));
+                replacing =  "[" + string.Join(",", instructionJsonStrings) + "]";
+            }
+            Debug.Log(
+                @$"Frame Serialize
+jsonStrng: {JsonPrettyPrinter.Format(json)}
+replaced: {JsonPrettyPrinter.Format(replaced)}
+replacing: {JsonPrettyPrinter.Format(replacing)}");
+
+            string result = json.Replace(replaced, replacing);
+
+            Debug.Log($"Frame Serialize\nresult: {JsonPrettyPrinter.Format(result)}");
+
+            return result;
         }
 
         public void Deserialize(string jsonString)

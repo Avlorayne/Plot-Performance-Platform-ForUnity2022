@@ -3,18 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
-using Plot_Performance_Platform_ForUnity2022.Instruction;
+using System.Text.Json.Serialization;
+using Plot_Performance_Platform_ForUnity2022.DataSequence;
+using Plot_Performance_Platform_ForUnity2022.Construct;
 using Plot_Performance_Platform_ForUnity2022.Utility;
 using UnityEngine;
 
-namespace Plot_Performance_Platform_ForUnity2022.Controller
+namespace Plot_Performance_Platform_ForUnity2022.DataSequence
 {
     public class FrameList
     {
+        #region Const Char
         private const string DEVIDE_CHAR = "---------------------------------------------------------------------------";
         private const int MAX_PRINT = 65;
+        #endregion
 
-        private List<Frame> _frames = new();
+        [JsonInclude] private List<Frame> _frames = new();
 
         #region PropertyOverrider
         public Frame this[int index]
@@ -23,29 +27,50 @@ namespace Plot_Performance_Platform_ForUnity2022.Controller
             set => _frames[index] = value;
         }
 
-        public List<Frame> Content => _frames;
+        [JsonIgnore] public List<Frame> Content => _frames;
 
         public void Add(Frame frame) => _frames.Add(frame);
         public void Add(InstrParam[] instructions) => _frames.Add(Frame.Create(instructions));
         public void Remove(int index) => _frames.RemoveAt(index);
         public void Clear() => _frames.Clear();
-        public int Count => _frames.Count;
+        [JsonIgnore] public int Count => _frames.Count;
         #endregion
 
         #region Serialize
         public string Serialize()
         {
-            if (_frames == null || _frames.Count == 0)
-                return "[]";
+            string json = JsonSerializer.Serialize(this);
+            string replaced = JsonSerializer.Serialize(_frames);
 
-            var frameJsonStrings = _frames.Select(frame => frame.Serialize());
-            return JsonPrettyPrinter.Format("[" + string.Join(",", frameJsonStrings) + "]");
+            string replacing;
+            if (_frames == null || _frames.Count == 0)
+            {
+                replacing =  "[]";
+            }
+            else
+            {
+                var frameJsonStrings = _frames.Select(frame => frame.Serialize());
+                replacing = "[" + string.Join(",", frameJsonStrings) + "]";
+            }
+            Debug.Log(
+                @$"FrameList Serialize
+jsonStrng: {JsonPrettyPrinter.Format(json)}
+replaced: {JsonPrettyPrinter.Format(replaced)}
+replacing: {JsonPrettyPrinter.Format(replacing)}");
+
+            string result = json.Replace(replaced, replacing);
+
+            Debug.Log($"FrameList Serialize\nresult: {JsonPrettyPrinter.Format(result)}");
+
+            return JsonPrettyPrinter.Format(result);
         }
 
         public void Deserialize(string jsonString)
         {
             _frames.Clear();
-
+            FrameList rawFrameList = new();
+            // ------------------------------------------------
+            #region JSON Check
             if (string.IsNullOrWhiteSpace(jsonString))
             {
                 Debug.LogError("JSON string is null or empty");
@@ -60,39 +85,21 @@ namespace Plot_Performance_Platform_ForUnity2022.Controller
                 Debug.LogError("JSON string contains only whitespace");
                 return;
             }
-
-            if (!cleanJson.StartsWith("["))
-            {
-                Debug.LogError($"Invalid JSON format. Expected array, got: {cleanJson.Substring(0, Math.Min(50, cleanJson.Length))}...");
-                return;
-            }
-
+            #endregion
+            // ------------------------------------------
+            #region JSON Parse
             try
             {
                 Debug.Log($"Start to Deserialize: {DEVIDE_CHAR}");
 
                 // 反序列化为 InstrParam 数组的列表
-                List<InstrParam[]> rawList = JsonSerializer.Deserialize<List<InstrParam[]>>(cleanJson);
+                rawFrameList = JsonSerializer.Deserialize<FrameList>(cleanJson);
 
-                if (rawList == null)
+                if (rawFrameList == null)
                 {
                     Debug.Log("Deserialization failed - null result");
                     return;
                 }
-
-                // 转换为 Frame 对象
-                foreach (var instructionArray in rawList)
-                {
-                    Frame frame = new Frame();
-                    foreach (var instr in instructionArray)
-                    {
-                        InstrParam convert = InstrParam.Convert(instr);
-                        frame.Add(convert);
-                    }
-                    _frames.Add(frame);
-                }
-
-                Debug.Log($"Successfully deserialized {rawList.Count} items {DEVIDE_CHAR}".Truncate(MAX_PRINT));
             }
             catch (JsonException ex)
             {
@@ -103,6 +110,31 @@ namespace Plot_Performance_Platform_ForUnity2022.Controller
             {
                 Debug.LogError($"Unexpected error during deserialization: {ex.Message}");
             }
+            #endregion
+            // -------------------------------------------------
+            #region Convert to frames
+            try
+            {
+                // 转换为 Frame 对象
+                foreach (var rawFrame in rawFrameList!.Content)
+                {
+                    Frame frame = new Frame();
+                    foreach (var instr in rawFrame.Content)
+                    {
+                        InstrParam convert = InstrParam.Convert(instr);
+                        frame.Add(convert);
+                    }
+                    _frames.Add(frame);
+                }
+
+                Debug.Log($"Successfully deserialized {rawFrameList.Count} items {DEVIDE_CHAR}".Truncate(MAX_PRINT));
+
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Unexpected error during deserialization:\n{ex.Message}");
+            }
+            #endregion
         }
         #endregion
 
