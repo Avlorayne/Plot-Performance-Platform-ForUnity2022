@@ -10,8 +10,8 @@ namespace Plot_Performance_Platform_ForUnity2022.Construct
 {
 public class ScriptTemplateGenerator
 {
-    private static string fileStorePath =
-        "Assets/Scripts/Plot Performance Platform ForUnity2022/Plot Files/ScriptTemplateGenerator.json";
+    private string fileStorePath =
+        "Assets/Scripts/Plot Performance Platform ForUnity2022/Include/Plot Files/ScriptTemplateGenerator.json";
     [JsonInclude] private string templateFile;
     [JsonInclude] private string folderPath;
 
@@ -24,11 +24,12 @@ public class ScriptTemplateGenerator
         template = File.ReadAllText(templateFile);
 
         template = template.Replace("#InstrParamTemplate#", $"{scriptName}Param");
-        template = template.Replace("#InstrExecuteTemplate#", $"{scriptName}Execute");
+        template = template.Replace("#InstrExecuteTemplate#", $"{scriptName}");
     }
 
     private void GetPath()
     {
+
         string fileStoreJson = File.ReadAllText(fileStorePath);
         var scriptTemplateGenerator = JsonSerializer.Deserialize<ScriptTemplateGenerator>(fileStoreJson);
 

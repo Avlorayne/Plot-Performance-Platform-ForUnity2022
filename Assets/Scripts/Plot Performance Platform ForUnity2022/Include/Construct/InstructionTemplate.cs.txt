@@ -9,7 +9,7 @@ namespace Plot_Performance_Platform_ForUnity2022.Instruction
     {
         #region "These Properties MUSTn't Be Changed!"
         public override string Name { get; protected set; } = nameof(#InstrParamTemplate#);
-        public override string ExecutorType { get; protected set; } = nameof(#InstrExecuteTemplate#);
+        protected override string _ExecutorType { get; set; } = nameof(#InstrExecuteTemplate#);
         #endregion
 
         #region Basic Property
