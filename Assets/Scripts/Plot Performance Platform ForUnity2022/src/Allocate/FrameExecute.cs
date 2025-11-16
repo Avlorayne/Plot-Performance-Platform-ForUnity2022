@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Plot_Performance_Platform_ForUnity2022.Include.Construct;
@@ -48,12 +49,27 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
         public FrameExecute(KeyValuePair<InstrParam, GameObject>[] pairs)
         {
             KeyValuePairs = pairs;
+
+            List<InstrParam> cantCoExist = new List<InstrParam>();
+
             foreach (var pair in pairs)
             {
                 if (pair.Key.IsRelese == false)
                 {
                     IsCanBeSkipped = false;
                     break;
+                }
+
+                if (pair.Key.IsCanCoexist == false)
+                {
+                    if(!cantCoExist.Contains(pair.Key))
+                    {
+                        cantCoExist.Add(pair.Key);
+                    }
+                    else
+                    {
+                        Debug.LogError($"[FrameExecute.Constructor]{pair.Key.Name} can't be coexist in the same frame.");
+                    }
                 }
             }
         }

@@ -139,14 +139,14 @@ replacing: {JsonPrettyPrinter.Format(replacing)}");
         #region Print
         public void Print()
         {
-            Debug.Log($"{nameof(FrameList)}: {DEVIDE_CHAR}".Truncate(MAX_PRINT));
+            Debug.Log($"[{nameof(FrameList)}] {DEVIDE_CHAR}".Truncate(MAX_PRINT));
 
             for (int i = 0; i < _frames.Count; i++)
             {
                 Debug.Log($"Frame {i}: \n{_frames[i].PrintString()}");
             }
 
-            Debug.Log($"{nameof(FrameList)} In total {_frames.Count} items {DEVIDE_CHAR}".Truncate(MAX_PRINT));
+            Debug.Log($"[{nameof(FrameList)}] In total {_frames.Count} items {DEVIDE_CHAR}".Truncate(MAX_PRINT));
         }
         #endregion
     }
