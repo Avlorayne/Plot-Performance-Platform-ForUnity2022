@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Plot_Performance_Platform_ForUnity2022.Construct;
-using Plot_Performance_Platform_ForUnity2022.Utility;
+using Plot_Performance_Platform_ForUnity2022.Include.Construct;
+using Plot_Performance_Platform_ForUnity2022.Include.Utility;
 using UnityEngine;
 
 namespace Plot_Performance_Platform_ForUnity2022.src.DataSequence

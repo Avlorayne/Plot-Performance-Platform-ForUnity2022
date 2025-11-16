@@ -1,7 +1,6 @@
 using System;
-using UnityEngine;
 
-namespace Plot_Performance_Platform_ForUnity2022.Utility
+namespace Plot_Performance_Platform_ForUnity2022.Include.Utility
 {
     /// <summary>
     /// 字符串扩展方法

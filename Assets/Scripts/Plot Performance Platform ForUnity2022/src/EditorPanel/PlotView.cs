@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Plot_Performance_Platform_ForUnity2022.Construct;
+using Plot_Performance_Platform_ForUnity2022.Include.Construct;
+using Plot_Performance_Platform_ForUnity2022.Include.Utility;
 using Plot_Performance_Platform_ForUnity2022.src.DataSequence;
-using Plot_Performance_Platform_ForUnity2022.Utility;
 using UnityEngine;
 using UnityEngine.UIElements;
 

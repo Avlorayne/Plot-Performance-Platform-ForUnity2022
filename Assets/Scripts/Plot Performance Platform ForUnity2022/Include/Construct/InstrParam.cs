@@ -4,10 +4,10 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
-using Plot_Performance_Platform_ForUnity2022.Utility;
+using Plot_Performance_Platform_ForUnity2022.Include.Utility;
 using UnityEngine;
 
-namespace Plot_Performance_Platform_ForUnity2022.Construct
+namespace Plot_Performance_Platform_ForUnity2022.Include.Construct
 {
 [Serializable]
 public class InstrParam

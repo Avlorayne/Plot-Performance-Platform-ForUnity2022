@@ -1,7 +1,7 @@
 using System;
 using System.Text.Json;
 
-namespace Plot_Performance_Platform_ForUnity2022.Utility
+namespace Plot_Performance_Platform_ForUnity2022.Include.Utility
 {
     public interface ISerializer
     {

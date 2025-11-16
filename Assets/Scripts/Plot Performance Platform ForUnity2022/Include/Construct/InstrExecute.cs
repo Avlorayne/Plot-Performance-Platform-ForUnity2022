@@ -1,13 +1,14 @@
 using UnityEngine;
 
-namespace Plot_Performance_Platform_ForUnity2022.Construct
+namespace Plot_Performance_Platform_ForUnity2022.Include.Construct
 {
     //
 public class InstrExecute : MonoBehaviour
 {
+    protected InstrParam _param = null;
     public InstrParam Param
     {
-        get => Param;
+        get => _param;
         set
         {
             if (Param != null && Param != value && !Param.IsRelese)
@@ -20,6 +21,7 @@ public class InstrExecute : MonoBehaviour
             }
         }
     }
+
 
     protected void ReleaseExecutor()
     {

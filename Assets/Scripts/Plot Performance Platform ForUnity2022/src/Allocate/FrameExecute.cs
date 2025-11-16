@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using System.Text;
-using Plot_Performance_Platform_ForUnity2022.Construct;
+using Plot_Performance_Platform_ForUnity2022.Include.Construct;
 using Plot_Performance_Platform_ForUnity2022.src.DataSequence;
+using UnityEngine;
 
 namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
 {
     public class FrameExecute
     {
-        public KeyValuePair<InstrParam, InstrExecute>[] KeyValuePairs { get; set; }
+        public KeyValuePair<InstrParam, GameObject>[] KeyValuePairs { get; set; }
 
         public bool IsCanBeSkipped { get; set; } = true;
         public bool isFrameComplete { get; set; } = false;
@@ -15,7 +16,7 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
 
         #region Property Override
 
-        public InstrExecute this[InstrParam key]
+        public GameObject this[InstrParam key]
         {
             get
             {
@@ -29,24 +30,22 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
 
                 return null;
             }
-
-            private set{}
         }
 
-        public KeyValuePair<InstrParam, InstrExecute> this[int index]
+        public KeyValuePair<InstrParam, GameObject> this[int index]
         {
             get => KeyValuePairs[index];
             set => KeyValuePairs[index] = value;
         }
 
-        public KeyValuePair<InstrParam, InstrExecute>[] Content => KeyValuePairs;
+        public KeyValuePair<InstrParam, GameObject>[] Content => KeyValuePairs;
 
         public int Count => KeyValuePairs.Length;
 
         #endregion
 
         #region Constructor
-        public FrameExecute(KeyValuePair<InstrParam, InstrExecute>[] pairs)
+        public FrameExecute(KeyValuePair<InstrParam, GameObject>[] pairs)
         {
             KeyValuePairs = pairs;
             foreach (var pair in pairs)

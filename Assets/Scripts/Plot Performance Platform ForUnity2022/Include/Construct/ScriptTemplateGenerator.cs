@@ -2,11 +2,11 @@ using System;
 using System.IO;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Plot_Performance_Platform_ForUnity2022.Utility;
+using Plot_Performance_Platform_ForUnity2022.Include.Utility;
 using UnityEditor;
 using UnityEngine;
 
-namespace Plot_Performance_Platform_ForUnity2022.Construct
+namespace Plot_Performance_Platform_ForUnity2022.Include.Construct
 {
 public class ScriptTemplateGenerator
 {
@@ -23,8 +23,8 @@ public class ScriptTemplateGenerator
 
         template = File.ReadAllText(templateFile);
 
-        template = template.Replace("#InstrParamTemplate#", $"{scriptName}Param");
-        template = template.Replace("#InstrExecuteTemplate#", $"{scriptName}");
+        template = template.Replace("_InstrParamTemplate_", $"{scriptName}Param");
+        template = template.Replace("_InstrExecuteTemplate_", $"{scriptName}");
     }
 
     private void GetPath()

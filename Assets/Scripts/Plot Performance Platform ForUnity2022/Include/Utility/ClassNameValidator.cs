@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Plot_Performance_Platform_ForUnity2022.Utility
+namespace Plot_Performance_Platform_ForUnity2022.Include.Utility
 {
     public static class ClassNameValidator
     {

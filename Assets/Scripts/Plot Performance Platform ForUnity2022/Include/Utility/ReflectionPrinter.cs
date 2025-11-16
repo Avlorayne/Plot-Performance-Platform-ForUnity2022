@@ -4,9 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
-using UnityEngine;
 
-namespace Plot_Performance_Platform_ForUnity2022.Utility
+namespace Plot_Performance_Platform_ForUnity2022.Include.Utility
 {
     public interface IPrinter
     {
