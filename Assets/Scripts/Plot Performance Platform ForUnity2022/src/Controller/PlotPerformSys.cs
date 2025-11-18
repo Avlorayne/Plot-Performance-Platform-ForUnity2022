@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using Plot_Performance_Platform_ForUnity2022.Include.Construct;
 using Plot_Performance_Platform_ForUnity2022.Instruction;
@@ -11,33 +13,156 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Controller
 {
     public class PlotPerformSys : MonoBehaviour
     {
-        public FrameList frameList = new FrameList();
-        public FrameExecuteList FrameExecuteList;
-        public TextAsset plotJson;
-        public Button saveButton;
-
-        void Start()
+        private static PlotPerformSys _instance;
+        public static PlotPerformSys Instance
         {
-            // 使用新的 Frame 封装
-            frameList.Add(new InstrParam[]{new TypeDialogueParam(new Dialogue("name","sentence"))});
-            frameList.Print();
-            // Serialize();
+            get
+            {
+                if (_instance == null)
+                    _instance = new PlotPerformSys();
+                return _instance;
+            }
+        }
+
+        #region Data
+        [Header("剧情脚本")]
+        public TextAsset plotJson;
+
+        private FrameExecuteList FrameExecuteList;
+        #endregion
+
+        [SerializeField] private int index;
+
+        public bool isClosed = true;
+
+
+        private void Awake()
+        {
+            if (_instance == null)
+            {
+                _instance = this;
+            }
+
+            LoadData();
+
+            index = 0;
+
+            Execute(FrameExecuteList[index]);
+        }
+
+
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
+            {
+                ControlFrame();
+            }
+        }
+
+        void ControlFrame()
+        {
+            if (index >= FrameExecuteList.Count)
+            {
+                ClosePlot();
+                return;
+            }
+
+            var currentFrame = FrameExecuteList[index];
+
+            switch (currentFrame.ExState)
+            {
+                case ExState.Ready:
+
+                    Execute(currentFrame);
+                    break;
+
+                case ExState.Executing:
+                    // 执行中：跳过
+                    if (currentFrame.IsCanBeSkipped)
+                    {
+                        Skip(currentFrame);
+                    }
+                    break;
+
+                case ExState.Completed:
+                    // 完成：结束并进入下一帧
+                    End(currentFrame);
+                    index++;
+
+                    if (index < FrameExecuteList.Count)
+                    {
+                        // 下一帧自动准备执行
+                        var nextFrame = FrameExecuteList[index];
+                        if (nextFrame.ExState == ExState.Ready)
+                        {
+                            Execute(nextFrame);
+                        }
+                    }
+                    else
+                    {
+                        ClosePlot();
+                    }
+                    break;
+
+                default:
+                    Debug.LogWarning($"[PlotPerformSys]Unexpected frame state: {currentFrame.ExState}");
+                    break;
+            }
+        }
+
+        #region Execute
+
+        public void Execute(FrameExecute frameExecute)
+        {
+            Dictionary<Type, KeyValuePair<InstrParam, InstrExecute>[]> exeTable
+                = FrameExecuteList[index].ExeTable;
+            foreach (var exes in exeTable)
+            {
+                StartCoroutine(frameExecute.CoSubExecute(exes.Value));
+            }
+        }
+
+        public void Skip(FrameExecute frameExecute)
+        {
+            frameExecute.Skip();
+        }
+
+        public void End(FrameExecute frameExecute)
+        {
+            frameExecute.End();
+        }
+
+
+        public void ClosePlot()
+        {
+            // FrameExecute closeFrame = new FrameExecute(new KeyValuePair<InstrParam, GameObject>[]{});
+            // Execute(closeFrame);
+            isClosed = true;
+            this.gameObject.SetActive(false);
+        }
+
+        #endregion
+
+
+        #region Data
+        void LoadData()
+        {
+            FrameList frameList = DeSerialize();
             FrameExecuteList = new FrameExecuteList(frameList);
             FrameExecuteList.Print();
         }
 
-        void Update()
+        FrameList DeSerialize()
         {
-        }
-
-        void DeSerialize()
-        {
+            FrameList frameList = new FrameList();
             string json = plotJson.text.Trim('\uFEFF');
             frameList.Deserialize(json);
             frameList.Print();
+
+            return frameList;
         }
 
-        void Serialize()
+        void Serialize( FrameList frameList)
         {
             string json = frameList.Serialize();
             string path = AssetDatabase.GetAssetPath(plotJson);
@@ -45,10 +170,11 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Controller
             AssetDatabase.Refresh();
         }
 
-        public void ButtonSave()
-        {
-            Serialize();
-            DeSerialize();
-        }
+        // public void ButtonSave()
+        // {
+        //     Serialize();
+        //     DeSerialize();
+        // }
+        #endregion
     }
 }

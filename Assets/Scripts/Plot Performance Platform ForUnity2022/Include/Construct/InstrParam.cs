@@ -48,10 +48,15 @@ public class InstrParam
     #endregion
 
     [JsonInclude] public virtual string Description { get; protected set; } = "Basic Description";
+    /// If this Instruction can coexist with other same Type of Instrs in the same Frame.
     [JsonInclude] public virtual bool IsCanCoexist { get; set; } = false;
     [JsonInclude] public virtual bool IsRelese { get; set; } = false;
 
     [JsonInclude] public virtual bool IsCanBeSkipped { get; set; } = false;
+
+    /// If this Instruction needs to be waited for Until completed.
+    /// And Then continue to execute the next Instr.
+    [JsonInclude] public virtual bool IsBeWaited { get; set; } = false;
 
     [JsonInclude] [JsonExtensionData] [CanBeNull] protected Dictionary<string, JsonElement> ExtensionData { get; set; } = new();
 

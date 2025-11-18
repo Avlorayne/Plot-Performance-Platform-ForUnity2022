@@ -32,7 +32,15 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
 
         private List<GameObject> Executors = new();
 
+        #region Property Override
 
+        public FrameExecute this[int index] { get => frameExList[index]; }
+
+        public int Count { get => frameExList.Count; }
+
+        public List<FrameExecute> Content => frameExList;
+
+        #endregion
 
         #region Construction
 
@@ -52,6 +60,12 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
 
             // 获取所有唯一的值
             Executors = ExecutorDict.Select(pair => pair.Value).Distinct().ToList();
+
+            Executors.ForEach(o =>
+            {
+                if (o != null)
+                    o.SetActive(false);
+            });
 
             // 按帧划分
             DevideByFrames(frames);
@@ -93,32 +107,38 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
                     }
 
                     // Check MonoBehaviour Type
-                    Type targetType = null;
+                    List<Type> targetTypes = new();
                     foreach (var script in scripts)
                     {
                         Type sriptType = script.GetType();
                         if (sriptType.IsSubclassOf(typeof(InstrExecute)))
                         {
-                            targetType = sriptType;
-                            break;
+                            targetTypes.Add(sriptType);
                         }
                     }
 
-                    if (targetType == null)
+                    if (targetTypes.Count == 0)
                     {
                         Debug.LogError($"[FrameExecuteList.GetAllPerfabs]{path}: {prefab} does not contain InstrExecute Script!");
                         continue;
                     }
-
-                    if (prefabDict.ContainsKey(targetType))
+                    if (targetTypes.Count != 1)
                     {
-                        Debug.LogError($"[FrameExecuteList.GetAllPerfabs]{targetType} Matches multiple Executors!");
+                        Debug.LogError($"[FrameExecuteList.GetAllPerfabs]{path}: {prefab} Contains more than one InstrExecute Script!");
                         continue;
                     }
 
-                    prefabDict.Add(targetType, prefab);
+                    Type type = targetTypes[0];
 
-                    Debug.Log($"[FrameExecuteList.GetAllPerfabs]Find instr Prefab: {path}: {targetType.Name}");
+                    if (prefabDict.ContainsKey(type))
+                    {
+                        Debug.LogError($"[FrameExecuteList.GetAllPerfabs]{type} Matches multiple Executors!");
+                        continue;
+                    }
+
+                    prefabDict.Add(type, prefab);
+
+                    Debug.Log($"[FrameExecuteList.GetAllPerfabs]Find instr Prefab: {path}: {type.Name}");
                 }
             }
 
@@ -147,7 +167,7 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
 
             foreach (var frameEx in frameExList)
             {
-                KeyValuePair<InstrParam, GameObject>[] pairs = frameEx.Content
+                KeyValuePair<InstrParam, GameObject>[] pairs = frameEx.Pairs
                     .Where(pair => param.ExecutorType == pair.Value.GetType())
                     .ToArray();
 
@@ -224,12 +244,6 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
                 frameExList.Add(new FrameExecute(pairs.ToArray()));
             }
         }
-
-        #endregion
-
-        #region Execute
-
-
 
         #endregion
 
