@@ -80,10 +80,10 @@ graph LR
 ### **2.1 构造新指令**
 
 在 `Window/Plot Editor` 中创建新的指令脚本。  
-[img1](ScreenShot/fb8b6739-3d25-4f3f-860b-d17a5fcc1b2d.png)  
-[img2](ScreenShot/ed29ca34-76bd-4510-9172-378827442689.png)  
-[img3](ScreenShot/ce2ff3a7-f1ee-4e05-b827-5f7fbe98d020.png)  
-[img4](ScreenShot/22410c89-3efb-4a4d-a79e-32d29955b320.png)  
+![img1](ScreenShot/fb8b6739-3d25-4f3f-860b-d17a5fcc1b2d.png)  
+![img2](ScreenShot/ed29ca34-76bd-4510-9172-378827442689.png)  
+![img3](ScreenShot/ce2ff3a7-f1ee-4e05-b827-5f7fbe98d020.png)  
+![img4](ScreenShot/22410c89-3efb-4a4d-a79e-32d29955b320.png)  
 新建的指令脚本会在 `Assets/Scripts/Plot Performance Platform ForUnity2022/Instruction/` 目录下，Unity会自动刷新资产索引。
 
 **指令脚本中的内容有两部分**：
@@ -191,7 +191,7 @@ public class TypeDialogue: InstrExecute
     #endregion
 }
 ```
-[img5](ScreenShot/67f77eb4-33c2-486a-9efd-18900bd1f2d6.png)
+![img5](ScreenShot/67f77eb4-33c2-486a-9efd-18900bd1f2d6.png)
 ### **执行流程详细说明**
 
 1. `void Start()` 和 `void Update()` 是 `InstrExecute` 作为 `Monobehaviour` 继承可使用的事件函数，但**不建议直接使用**这部分内容，指令执行主体在以下几个函数中。
