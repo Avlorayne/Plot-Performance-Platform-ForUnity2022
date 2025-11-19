@@ -24,7 +24,6 @@ namespace Plot_Performance_Platform_ForUnity2022.Instruction
         public override bool IsRelese { get; set; } = false;
         public override bool IsCanBeSkipped { get; set; } = true;
         public override bool IsBeWaited { get; set; } = false;
-
         #endregion
     }
     #endregion
@@ -48,32 +47,32 @@ namespace Plot_Performance_Platform_ForUnity2022.Instruction
         {
 
         }
-
+        // Init will be auto called,so it's not necessary to call Init in this part.
         protected override void Init()
         {
 
         }
 
-        /// 执行指令
+        // Execute will be called before CoExecute if there exists contents here.
         protected override void Execute()
         {
 
         }
 
-
+        // CoExecute can be ignored if not needed, or auto called.
         protected override IEnumerator CoExecute()
         {
 
             yield return null;
         }
 
-        // 中断指令
+        // When executing this Instr, Interrupt it.
         protected override void Interrupt()
         {
 
         }
 
-        // 结束指令
+        // When this Instr is completed, End this.
         protected override void End()
         {
 
