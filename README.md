@@ -182,6 +182,9 @@ public class CPT: InstrExecute
 public class TypeDialogue: InstrExecute
 {
     #region Execute Param
+    [Header("文本组件")] 
+    public TextMeshProUGUI speakerNameText;
+    public TextMeshProUGUI dialogueText;
     
     [Header("文本速度")] 
     public float textSpeed = 0.05f;
