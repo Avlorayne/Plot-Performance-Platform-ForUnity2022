@@ -70,8 +70,7 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Controller
             }
 
             var currentFrame = FrameExecuteList[index];
-            Debug.Log($"[PlotPerformSys.ControlFrame] FrameExecuteList[{index}]:{(currentFrame  != null ? "is called" : "is Null")}.]");
-
+            Debug.Log($"[PlotPerformSys.ControlFrame] FrameExecuteList[{index}]: State={currentFrame?.ExState}, CanSkip={currentFrame?.IsCanBeSkipped}");
             switch (currentFrame.ExState)
             {
                 case ExState.Null:
@@ -86,11 +85,8 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Controller
                     break;
 
                 case ExState.Executing:
-                    // 执行中：跳过
-                    if (currentFrame.IsCanBeSkipped)
-                    {
-                        Skip(currentFrame);
-                    }
+
+                    Skip(currentFrame);
                     break;
 
                 case ExState.Completed:
@@ -116,7 +112,7 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Controller
                     break;
 
                 default:
-                    Debug.LogWarning($"[PlotPerformSys]Unexpected frame state: {currentFrame.ExState}");
+                    Debug.LogWarning($"[PlotPerformSys.ControlFrame]Unexpected frame state: {currentFrame.ExState}");
                     break;
             }
         }

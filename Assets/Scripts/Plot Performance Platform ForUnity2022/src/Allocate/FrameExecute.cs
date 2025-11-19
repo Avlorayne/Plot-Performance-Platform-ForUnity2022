@@ -164,6 +164,7 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
             foreach (var execute in exeSeq)
             {
                 execute.Interrupt();
+                Debug.Log($"[FrameExecute.Skip]");
             }
 
             ExState = ExState.Completed;
@@ -207,7 +208,7 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
             {
                 ExState = ExState.Executing;
             }
-            Debug.Log($"[FrameExecute.OnExecuting] {ExState}");
+            Debug.Log($"[FrameExecute.OnInstrExecuting] {ExState}");
         }
 
         private void OnInstrCompleted()
@@ -216,7 +217,6 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
             if (CompletedExes == Count)
             {
                 ExState = ExState.Completed;
-                // this.OnCompleted?.Invoke();
             }
 
             Debug.Log($"[FrameExecute.OnInstrCompleted] {CompletedExes} Instrs Completed.\nFrameState:{ExState}");

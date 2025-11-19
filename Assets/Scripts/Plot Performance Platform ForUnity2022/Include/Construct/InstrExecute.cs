@@ -75,6 +75,7 @@ public abstract class InstrExecute : MonoBehaviour
         if (ExState == ExState.Executing)
         {
             ExState = ExState.Completed;
+            Debug.Log($"[InstrExecute.OnCompleted] {ExState}]");
             OnCompleted?.Invoke();
         }
     }
@@ -84,6 +85,7 @@ public abstract class InstrExecute : MonoBehaviour
         if (ExState == ExState.Ready)
         {
             ExState = ExState.Executing;
+            Debug.Log($"[InstrExecute.OnExecuting] {ExState}");
             OnExecuting?.Invoke();
         }
     }
