@@ -6,10 +6,8 @@ using Plot_Performance_Platform_ForUnity2022.Include.Utility;
 using Plot_Performance_Platform_ForUnity2022.src.DataSequence;
 using UnityEngine;
 using UnityEditor;
-
 namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
 {
-
     public class FrameExecuteList
     {
         #region Const Char
@@ -28,7 +26,7 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
         /// <Value>Prefab</Value>
         private Dictionary<Type,GameObject> prefabDict = new();
 
-        private Dictionary<InstrParam, GameObject> ExecutorDict = new();
+        private List<KeyValuePair<InstrParam, InstrExecute>> ExecutorDict = new();
 
         private List<GameObject> Executors = new();
 
@@ -57,9 +55,6 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
                     Allocate(instr);
                 }
             }
-
-            // 获取所有唯一的值
-            Executors = ExecutorDict.Select(pair => pair.Value).Distinct().ToList();
 
             Executors.ForEach(o =>
             {
@@ -147,12 +142,12 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
 
         private void Allocate(InstrParam param)
         {
-            GameObject execute = GetReleasedExecutor(param);
+            InstrExecute execute = GetReleasedExecutor(param);
 
             // Add null check before adding to dictionary
             if (execute != null)
             {
-                ExecutorDict.Add(param, execute);
+                ExecutorDict.Add(new KeyValuePair<InstrParam, InstrExecute>(param, execute));
             }
             else
             {
@@ -160,23 +155,16 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
             }
         }
 
-        private GameObject GetReleasedExecutor(InstrParam param)
+        private InstrExecute GetReleasedExecutor(InstrParam param)
         {
             // Step1. Find Type-Match Pairs used to exist
-            List<KeyValuePair<InstrParam, GameObject>> matchPairs = new();
+            KeyValuePair<InstrParam, InstrExecute>[] matchPairs = ExecutorDict
+                .Where(pair => param.ExecutorType == pair.Value.GetType()).ToArray();
 
-            foreach (var frameEx in frameExList)
-            {
-                KeyValuePair<InstrParam, GameObject>[] pairs = frameEx.Pairs
-                    .Where(pair => param.ExecutorType == pair.Value.GetType())
-                    .ToArray();
-
-                matchPairs.AddRange(pairs);
-            }
-            Debug.Log($"[FrameExecuteList.GetReleasedExecutor]Macthed Pairs: {matchPairs.Count}");
+            Debug.Log($"[FrameExecuteList.GetReleasedExecutor]Macthed Pairs: {matchPairs.Length}");
 
             // Step2. Get Released Executor
-            List<GameObject> releasedExecutors = new ();
+            List<InstrExecute> releasedExecutors = new ();
 
             foreach (var pair in matchPairs)
             {
@@ -205,7 +193,12 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
 
                     if (_object != null)
                     {
-                        releasedExecutors.Add(_object);
+                        InstrExecute executor = _object.GetComponent<InstrExecute>();
+                        if (executor != null)
+                        {
+                            releasedExecutors.Add(executor);
+                            Executors.Add(_object);
+                        }
                     }
                     else
                     {
@@ -227,13 +220,15 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
 
             foreach (var frame in frames.Content)
             {
-                List<KeyValuePair<InstrParam, GameObject>> pairs = new();
+                List<KeyValuePair<InstrParam, InstrExecute>> pairs = new();
 
                 foreach (var instr in frame.Content)
                 {
-                    if (ExecutorDict.TryGetValue(instr, out GameObject execute))
+                    InstrExecute execute = ExecutorDict.FirstOrDefault(pair => pair.Key == instr).Value;
+
+                    if (execute != null)
                     {
-                        pairs.Add(new KeyValuePair<InstrParam, GameObject>(instr, execute));
+                        pairs.Add(new KeyValuePair<InstrParam, InstrExecute>(instr, execute));
                     }
                     else
                     {

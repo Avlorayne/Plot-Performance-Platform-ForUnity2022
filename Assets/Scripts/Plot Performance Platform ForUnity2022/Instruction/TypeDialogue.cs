@@ -67,7 +67,7 @@ namespace Plot_Performance_Platform_ForUnity2022.Instruction
         public TextMeshProUGUI speakerNameText;
         public TextMeshProUGUI dialogueText;
 
-        [Header("文本速度")] public float textSpeed = 1f;
+        [Header("文本速度")] public float textSpeed = 0.05f;
 
         Dialogue currentDialogue;
 
@@ -99,8 +99,10 @@ namespace Plot_Performance_Platform_ForUnity2022.Instruction
             foreach (char c in currentDialogue.Sentence)
             {
                 dialogueText.text += c;
+                Debug.Log($"[TypeDialogue.CoExecute] {dialogueText.text}...");
                 yield return new WaitForSeconds(textSpeed);
             }
+            Debug.Log($"[TypeDialogue.CoExecute] {dialogueText.text}(Completed)");
 
             #endregion
 
@@ -117,6 +119,7 @@ namespace Plot_Performance_Platform_ForUnity2022.Instruction
             #region Stop Execute Prat
 
             dialogueText.text = currentDialogue.Sentence;
+            Debug.Log($"[TypeDialogue.Interrupt] {dialogueText.text}");
 
             #endregion
 

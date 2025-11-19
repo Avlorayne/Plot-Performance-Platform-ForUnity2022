@@ -11,7 +11,7 @@ namespace Plot_Performance_Platform_ForUnity2022.Include.Construct
 public class ScriptTemplateGenerator
 {
     private string fileStorePath =
-        "Assets/Scripts/Plot Performance Platform ForUnity2022/Include/Plot Files/ScriptTemplateGenerator.json";
+        "Assets/Scripts/Plot Performance Platform ForUnity2022/Include/Construct/ScriptTemplateGenerator.json";
     [JsonInclude] private string templateFile;
     [JsonInclude] private string folderPath;
 

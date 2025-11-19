@@ -1,0 +1,38 @@
+{
+  "_frames": [
+    {
+      "_instructions": [
+        {
+          "Name": "TypeDialogueParam",
+          "Description": "TypeDialogueParam Description",
+          "IsCanCoexist": false,
+          "IsRelese": true,
+          "IsBeWaited": false,
+          "dialogue": {
+            "Name": "name1",
+            "Sentence": "sentence1111122222222222"
+          },
+          "_ExecutorType": "TypeDialogue",
+          "IsCanBeSkipped": false
+        }
+      ]
+    },
+    {
+      "_instructions": [
+        {
+          "Name": "TypeDialogueParam",
+          "Description": "TypeDialogueParam Description",
+          "IsCanCoexist": false,
+          "IsRelese": true,
+          "IsBeWaited": false,
+          "dialogue": {
+            "Name": "name2",
+            "Sentence": "sentence2222222222333333"
+          },
+          "_ExecutorType": "TypeDialogue",
+          "IsCanBeSkipped": false
+        }
+      ]
+    }
+  ]
+}

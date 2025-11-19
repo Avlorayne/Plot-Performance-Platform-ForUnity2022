@@ -39,7 +39,7 @@ public class InstrParam
             {
                 Debug.Log($"[InstrParam.ExecutorType]Can't find executor type {_ExecutorType}");
             }
-            Debug.Log($"[InstrParam.ExecutorType]Find  executor type {type.Name}");
+            // Debug.Log($"[InstrParam.ExecutorType]Find  executor type {type.Name}");
             return type;
         }
         protected set{ }

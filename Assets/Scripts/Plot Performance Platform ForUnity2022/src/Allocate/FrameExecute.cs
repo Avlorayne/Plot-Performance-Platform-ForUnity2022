@@ -20,7 +20,7 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
 
     public class FrameExecute
     {
-        private KeyValuePair<InstrParam, InstrExecute>[] InstrsPairs { get; }
+        public KeyValuePair<InstrParam, InstrExecute>[] InstrsPairs { get; }
 
         public Dictionary<Type, KeyValuePair<InstrParam, InstrExecute>[]>
             ExeTable { get; }
@@ -35,9 +35,7 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
         public KeyValuePair<InstrParam, InstrExecute>[]
             this[Type type] { get => ExeTable[type]; }
 
-        public KeyValuePair<InstrParam, GameObject>[] Pairs { get; private set; }
-
-        public GameObject[] Executors { get; private set; }
+        public InstrExecute[] Executors { get; private set; }
 
 
         public int Count => InstrsPairs.Length;
@@ -45,11 +43,11 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
         #endregion
 
         #region Construction
-        public FrameExecute(KeyValuePair<InstrParam, GameObject>[] pairs)
+        public FrameExecute(KeyValuePair<InstrParam, InstrExecute>[] pairs)
         {
-            KeyValuePair<InstrParam, GameObject>[] KeyValuePairs = pairs;
-
+            InstrsPairs = pairs;
             CompletedExes = 0;
+            Executors = InstrsPairs.Select(x => x.Value).ToArray();
 
             #region Check CoExist Valid
             List<InstrParam> cantCoExist = new List<InstrParam>();
@@ -80,30 +78,6 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
 
             #endregion
 
-            #region Construct InstrsPairs
-
-            Pairs = KeyValuePairs;
-            Executors = KeyValuePairs.Select(x => x.Value).ToArray();
-
-            List<KeyValuePair<InstrParam, InstrExecute>> pairList = new ();
-            foreach (var pair in KeyValuePairs)
-            {
-                InstrParam param = pair.Key;
-                InstrExecute execute = pair.Value.GetComponents<MonoBehaviour>().Select(mono =>
-                {
-                    if(mono.GetType().IsSubclassOf(typeof(InstrExecute)))
-                        return mono;
-
-                    return null;
-                }).FirstOrDefault() as InstrExecute;
-
-                pairList.Add(new KeyValuePair<InstrParam, InstrExecute>(param, execute));
-            }
-
-            InstrsPairs = pairList.ToArray();
-
-            #endregion
-
             #region Construct ExeTable
 
             ExeTable = InstrsPairs.
@@ -111,12 +85,28 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
                 ToDictionary(g => g.Key, g => g.ToArray());
 
             #endregion
-
-            ExState = ExState.Ready;
         }
         #endregion
 
         #region Execute
+
+        public void Active()
+        {
+            foreach (var pair in InstrsPairs)
+            {
+                try
+                {
+                   Debug.Log($"[FrameExecute.Active]");
+                   pair.Value.gameObject.SetActive(true);
+                }
+                catch
+                {
+                    throw new Exception($"[FrameExecute.Active]{pair.Key.Name} can't be active.");
+                }
+            }
+
+            ExState = ExState.Ready;
+        }
 
         public IEnumerator CoSubExecute(KeyValuePair<InstrParam, InstrExecute>[] pairs)
         {
@@ -175,6 +165,8 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
             {
                 execute.Interrupt();
             }
+
+            ExState = ExState.Completed;
         }
 
         public void End()
@@ -215,6 +207,7 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
             {
                 ExState = ExState.Executing;
             }
+            Debug.Log($"[FrameExecute.OnExecuting] {ExState}");
         }
 
         private void OnInstrCompleted()
@@ -225,6 +218,8 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
                 ExState = ExState.Completed;
                 // this.OnCompleted?.Invoke();
             }
+
+            Debug.Log($"[FrameExecute.OnInstrCompleted] {CompletedExes} Instrs Completed.\nFrameState:{ExState}");
         }
 
         #endregion
@@ -233,9 +228,9 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
         public string PrintString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"Frame with {Pairs.Length} instructions:");
+            sb.AppendLine($"Frame with {InstrsPairs.Length} instructions:");
 
-            foreach (var pair in Pairs)
+            foreach (var pair in InstrsPairs)
             {
                 sb.AppendLine($"\tExecutor: {pair.Value.GetType().Name}\nInstruction: {InstrParam.PrintString(pair.Key)}");
             }

@@ -5,6 +5,7 @@ using Plot_Performance_Platform_ForUnity2022.Include.Construct;
 using Plot_Performance_Platform_ForUnity2022.Instruction;
 using Plot_Performance_Platform_ForUnity2022.src.Allocate;
 using Plot_Performance_Platform_ForUnity2022.src.DataSequence;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -42,12 +43,13 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Controller
             {
                 _instance = this;
             }
+            Debug.Log("[PlotPerformSys.Awake]");
 
+            testData();
             LoadData();
 
             index = 0;
-
-            Execute(FrameExecuteList[index]);
+            ControlFrame();
         }
 
 
@@ -68,9 +70,16 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Controller
             }
 
             var currentFrame = FrameExecuteList[index];
+            Debug.Log($"[PlotPerformSys.ControlFrame] FrameExecuteList[{index}]:{(currentFrame  != null ? "is called" : "is Null")}.]");
 
             switch (currentFrame.ExState)
             {
+                case ExState.Null:
+
+                    currentFrame.Active();
+                    ControlFrame();
+                    break;
+
                 case ExState.Ready:
 
                     Execute(currentFrame);
@@ -93,6 +102,8 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Controller
                     {
                         // 下一帧自动准备执行
                         var nextFrame = FrameExecuteList[index];
+                        nextFrame.Active();
+
                         if (nextFrame.ExState == ExState.Ready)
                         {
                             Execute(nextFrame);
@@ -115,7 +126,10 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Controller
         public void Execute(FrameExecute frameExecute)
         {
             Dictionary<Type, KeyValuePair<InstrParam, InstrExecute>[]> exeTable
-                = FrameExecuteList[index].ExeTable;
+                = FrameExecuteList.Content.Contains(frameExecute) ? FrameExecuteList[index].ExeTable
+                    : frameExecute.ExeTable;
+            Debug.Log($"[PlotPerformSys.Execute]Executing {(FrameExecuteList.Content.Contains(frameExecute) ? index : " ")}...");
+
             foreach (var exes in exeTable)
             {
                 StartCoroutine(frameExecute.CoSubExecute(exes.Value));
@@ -145,11 +159,32 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Controller
 
 
         #region Data
+
+        void testData()
+        {
+            FrameList tmp = new FrameList();
+            Frame F1 = new Frame();
+            F1.Add(new TypeDialogueParam(new Dialogue("name1","sentence1111122222222222")));
+            Frame F2 = new Frame();
+            F2.Add(new TypeDialogueParam(new Dialogue("name2","sentence2222222222333333")));
+
+            tmp.Add(F1);
+            tmp.Add(F2);
+            Serialize(tmp);
+        }
         void LoadData()
         {
             FrameList frameList = DeSerialize();
             FrameExecuteList = new FrameExecuteList(frameList);
             FrameExecuteList.Print();
+            for (int i = 0; i < FrameExecuteList.Count; i++)
+            {
+                if (FrameExecuteList[i] == null)
+                {
+                    Debug.LogWarning($"[PlotPerformSys.LoadData]FrameExecuteList[{i}] is null.");
+                }
+            }
+            Debug.Log($"[PlotPerformSys.LoadData] Load Completed.");
         }
 
         FrameList DeSerialize()
