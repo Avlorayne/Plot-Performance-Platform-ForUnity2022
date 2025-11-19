@@ -33,7 +33,7 @@ public abstract class InstrExecute : MonoBehaviour
         ExState = ExState.Null;
     }
 
-    public void Init(InstrParam param)
+    public void Init_Pack(InstrParam param)
     {
         Param ??= param;
         if (Param != null)
@@ -42,24 +42,55 @@ public abstract class InstrExecute : MonoBehaviour
         Init();
     }
 
+    public void Execute_Pack()
+    {
+        MarkExecuting();
+        Execute();
+        StartCoroutine(CoExecute_Pack());
+    }
+
+    private IEnumerator CoExecute_Pack()
+    {
+        yield return StartCoroutine(CoExecute());
+        MarkCompleted();
+    }
+
+    public void Interrupt_Pcak()
+    {
+        if (!Param.IsCanBeSkipped)
+        {
+            Debug.Log($"[TypeDialogue.Interrupt] Cannot skip this dialogue");
+            return;
+        }
+        // 停止协程
+        StopAllCoroutines();
+        Interrupt();
+        MarkCompleted();
+    }
+
+    public void End_Pack()
+    {
+        End();
+        ExState = ExState.End;
+        Debug.Log($"[TypeDialogue.End]");
+        if (Param.IsRelese)  ReleaseExecutor();
+    }
 
     #region Executor
-
-    /// Init will be auto called in Init(InstrParam param),so it's not necessary to call Init in this part.
+    /// Init will be auto called in Init_Pack,so it's not necessary to call Init in this part.
     protected abstract void Init();
+    /// Execute will be called before CoExecute if there exists contents here.
+    protected abstract void Execute();
 
-    public abstract void Execute();
-
-    /// CoExecute can be ignored if not needed, or call it in Execute.
+    /// CoExecute can be ignored if not needed, or auto called in Execute_Pack.
     protected virtual IEnumerator CoExecute()
     {
         yield return null;
     }
-    public abstract void Interrupt();
-
-    /// Called when this Frame is wholely completed and Transfer to the next Frame.
-    public abstract void End();
-
+    /// When executing this Instr, Interrupt it.
+    protected abstract void Interrupt();
+    /// When this Instr is completed, End this.
+    protected abstract void End();
     #endregion
 
 

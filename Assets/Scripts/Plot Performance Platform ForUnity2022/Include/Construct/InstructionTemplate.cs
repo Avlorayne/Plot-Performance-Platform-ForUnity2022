@@ -22,7 +22,7 @@ namespace Plot_Performance_Platform_ForUnity2022.Instruction
 
         #region Basic Property
         public override bool IsRelese { get; set; } = false;
-        public override bool IsCanBeSkipped { get; set; } = false;
+        public override bool IsCanBeSkipped { get; set; } = true;
         public override bool IsBeWaited { get; set; } = false;
 
         #endregion
@@ -32,7 +32,7 @@ namespace Plot_Performance_Platform_ForUnity2022.Instruction
     #region Executor
     public class _InstrExecuteTemplate_: InstrExecute
     {
-        #region Execute Param
+        #region Execute_Pack Param
 
 
 
@@ -56,55 +56,28 @@ namespace Plot_Performance_Platform_ForUnity2022.Instruction
         }
 
         /// 执行指令
-        public override void Execute()
+        protected override void Execute()
         {
-            MarkExecuting();
 
-            #region Execute Part
-            // If Corountine needed
-            // StartCoroutine(CoExecute());
-
-
-            #endregion
         }
 
 
         protected override IEnumerator CoExecute()
         {
-            #region Execute Part
 
-
-
-            #endregion
-
-            MarkCompleted();
             yield return null;
         }
 
         // 中断指令
-        public override void Interrupt()
+        protected override void Interrupt()
         {
-            if (!Param.IsCanBeSkipped) return;
 
-            StopCoroutine(CoExecute());
-
-            #region Interrupt Prat
-
-            #endregion
-
-            MarkCompleted();
         }
 
         // 结束指令
-        public override void End()
+        protected override void End()
         {
-            #region End Execute Prat
 
-            #endregion
-
-            ExState = ExState.End;
-
-            if (Param.IsRelese) ReleaseExecutor();
         }
         #endregion
     }

@@ -40,7 +40,7 @@ namespace Plot_Performance_Platform_ForUnity2022.Instruction
 
         // 是否在此处释放占用
         public override bool IsRelese { get; set; } = true;
-        public override bool IsCanBeSkipped { get; set; } = false;
+        public override bool IsCanBeSkipped { get; set; } = true;
 
         public override bool IsBeWaited { get; set; }
 
@@ -62,7 +62,7 @@ namespace Plot_Performance_Platform_ForUnity2022.Instruction
     #region Executor
     public class TypeDialogue: InstrExecute
     {
-        #region Execute Param
+        #region Execute_Pack Param
 
         [Header("文本组件")]
         public TextMeshProUGUI speakerNameText;
@@ -85,17 +85,13 @@ namespace Plot_Performance_Platform_ForUnity2022.Instruction
         }
 
         // 执行指令
-        public override void Execute()
+        protected override void Execute()
         {
-            MarkExecuting();
 
-            StartCoroutine(CoExecute());
         }
 
         protected override IEnumerator CoExecute()
         {
-            #region Execute Part
-
             // 逐字显示
             foreach (char c in currentDialogue.Sentence)
             {
@@ -104,42 +100,19 @@ namespace Plot_Performance_Platform_ForUnity2022.Instruction
                 yield return new WaitForSeconds(textSpeed);
             }
             Debug.Log($"[TypeDialogue.CoExecute] {dialogueText.text}(Completed)");
-
-            #endregion
-
-            MarkCompleted();
         }
 
         // 中断指令
-        public override void Interrupt()
+        protected override void Interrupt()
         {
-            if (!Param.IsCanBeSkipped)
-            {
-                Debug.Log($"[TypeDialogue.Interrupt] Cannot skip this dialogue");
-                return;
-            }
-
-            // 停止协程
-            StopAllCoroutines();
-
-            #region Stop Execute Part
             dialogueText.text = currentDialogue.Sentence;
-            Debug.Log($"[TypeDialogue.Interrupt] {dialogueText.text}");
-            #endregion
-
-            MarkCompleted();
+            Debug.Log($"[TypeDialogue.Interrupt_Pcak] {dialogueText.text}");
         }
 
         // 结束指令
-        public override void End()
+        protected override void End()
         {
-            #region End Execute Prat
 
-
-            #endregion
-			Debug.Log($"[TypeDialogue.End]");
-
-            if (Param.IsRelese)  ReleaseExecutor();
         }
         #endregion
 

@@ -54,9 +54,10 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
 
             foreach (var pair in pairs)
             {
-                if (pair.Key.IsRelese == false)
+                if (pair.Key.IsCanBeSkipped == false)
                 {
                     IsCanBeSkipped = false;
+                    Debug.Log($"[FrameExecute.Construction] Frame cannot be skipped because {pair.Key.Name}.IsCanBeSkipped is false");
                     break;
                 }
             }
@@ -127,10 +128,10 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
                 if (execute == exeSeq[0])
                 {
                     if(execute.Param == null)
-                        execute.Init(pair.Key);
+                        execute.Init_Pack(pair.Key);
 
                     if(execute.ExState == ExState.Ready)
-                        execute.Execute();
+                        execute.Execute_Pack();
                 }
                 else
                     for (int i = 1; i < exeSeq.Length; i++)
@@ -143,10 +144,10 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
                             }
 
                             if(execute.Param == null)
-                                execute.Init(pair.Key);
+                                execute.Init_Pack(pair.Key);
 
                             if(execute.ExState == ExState.Ready)
-                                execute.Execute();
+                                execute.Execute_Pack();
                         }
                     }
             }
@@ -163,7 +164,7 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
             InstrExecute[] exeSeq = InstrsPairs.Select(pair => pair.Value).ToArray();
             foreach (var execute in exeSeq)
             {
-                execute.Interrupt();
+                execute.Interrupt_Pcak();
                 Debug.Log($"[FrameExecute.Skip]");
             }
 
@@ -182,7 +183,7 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
             foreach (var execute in exeSeq)
             {
 
-                execute.End();
+                execute.End_Pack();
             }
 
             #region UnRegister Events
