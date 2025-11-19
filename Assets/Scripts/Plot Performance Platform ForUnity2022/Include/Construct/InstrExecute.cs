@@ -1,5 +1,6 @@
 using System.Collections;
 using Plot_Performance_Platform_ForUnity2022.src.Allocate;
+using Plot_Performance_Platform_ForUnity2022.src.Controller;
 using UnityEngine;
 
 namespace Plot_Performance_Platform_ForUnity2022.Include.Construct
@@ -24,6 +25,8 @@ public abstract class InstrExecute : MonoBehaviour
         }
     }
 
+    [Header("父组件")] public GameObject ParentGameObject;
+
     public ExState ExState = ExState.Null;
 
 
@@ -38,6 +41,21 @@ public abstract class InstrExecute : MonoBehaviour
         Param ??= param;
         if (Param != null)
             ExState = ExState.Ready;
+
+        // 指令对象属于 UI，将其层级设为 Canvas 子物体
+        if (gameObject.GetComponent<RectTransform>() != null && ParentGameObject == null)
+        {
+            GameObject canvas = PlotPerformSys.Instance.gameObject;
+            ParentGameObject = canvas;
+            RectTransform parentRectTransform = canvas.GetComponent<RectTransform>();
+            RectTransform rectTransform = gameObject.GetComponent<RectTransform>();
+            rectTransform.SetParent(parentRectTransform, false);
+        }
+        // 指令对象属于一般 GameObject，则自定义父物体
+        else if (ParentGameObject != null)
+        {
+            transform.SetParent(ParentGameObject.transform);
+        }
 
         Init();
     }
@@ -106,7 +124,7 @@ public abstract class InstrExecute : MonoBehaviour
         if (ExState == ExState.Executing)
         {
             ExState = ExState.Completed;
-            Debug.Log($"[InstrExecute.OnCompleted] {ExState}]");
+            Debug.Log($"[InstrExecute.OnCompleted] {Param.Name} {ExState}]");
             OnCompleted?.Invoke();
         }
     }
@@ -116,7 +134,7 @@ public abstract class InstrExecute : MonoBehaviour
         if (ExState == ExState.Ready)
         {
             ExState = ExState.Executing;
-            Debug.Log($"[InstrExecute.OnExecuting] {ExState}");
+            Debug.Log($"[InstrExecute.OnExecuting] {Param.Name} {ExState}");
             OnExecuting?.Invoke();
         }
     }

@@ -1,8 +1,11 @@
 using System;
 using System.Collections;
+using System.Linq;
 using Plot_Performance_Platform_ForUnity2022.Include.Construct;
 using Plot_Performance_Platform_ForUnity2022.src.Allocate;
+using Plot_Performance_Platform_ForUnity2022.src.Controller;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
 
 namespace Plot_Performance_Platform_ForUnity2022.Instruction
@@ -62,7 +65,7 @@ namespace Plot_Performance_Platform_ForUnity2022.Instruction
     #region Executor
     public class TypeDialogue: InstrExecute
     {
-        #region Execute_Pack Param
+        #region Execute Param
 
         [Header("文本组件")]
         public TextMeshProUGUI speakerNameText;
@@ -92,21 +95,22 @@ namespace Plot_Performance_Platform_ForUnity2022.Instruction
 
         protected override IEnumerator CoExecute()
         {
+            speakerNameText.text = currentDialogue.Name;
             // 逐字显示
             foreach (char c in currentDialogue.Sentence)
             {
                 dialogueText.text += c;
-                Debug.Log($"[TypeDialogue.CoExecute] {dialogueText.text}...");
+                // Debug.Log($"[TypeDialogue.CoExecute] {dialogueText.text}...");
                 yield return new WaitForSeconds(textSpeed);
             }
-            Debug.Log($"[TypeDialogue.CoExecute] {dialogueText.text}(Completed)");
+            // Debug.Log($"[TypeDialogue.CoExecute] {dialogueText.text}(Completed)");
         }
 
         // 中断指令
         protected override void Interrupt()
         {
             dialogueText.text = currentDialogue.Sentence;
-            Debug.Log($"[TypeDialogue.Interrupt_Pcak] {dialogueText.text}");
+            // Debug.Log($"[TypeDialogue.Interrupt_Pcak] {dialogueText.text}");
         }
 
         // 结束指令

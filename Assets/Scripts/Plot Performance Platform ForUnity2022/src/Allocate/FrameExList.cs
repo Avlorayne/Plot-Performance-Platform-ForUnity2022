@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Plot_Performance_Platform_ForUnity2022.Include.Construct;
 using Plot_Performance_Platform_ForUnity2022.Include.Utility;
+using Plot_Performance_Platform_ForUnity2022.src.Controller;
 using Plot_Performance_Platform_ForUnity2022.src.DataSequence;
 using UnityEngine;
 using UnityEditor;
@@ -190,6 +191,8 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
                         prefabType,
                         new Vector3(),
                         Quaternion.identity);
+
+                    _object.name =_object.name.Replace("(Clone)", "");
 
                     if (_object != null)
                     {

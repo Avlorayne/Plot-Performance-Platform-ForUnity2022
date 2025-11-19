@@ -4,10 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Plot_Performance_Platform_ForUnity2022.Include.Construct;
-using Unity.VisualScripting;
 using UnityEngine;
 
-namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
+namespace Plot_Performance_Platform_ForUnity2022.src.Controller
 {
     public enum ExState
     {
@@ -36,7 +35,6 @@ namespace Plot_Performance_Platform_ForUnity2022.src.Allocate
             this[Type type] { get => ExeTable[type]; }
 
         public InstrExecute[] Executors { get; private set; }
-
 
         public int Count => InstrsPairs.Length;
 
