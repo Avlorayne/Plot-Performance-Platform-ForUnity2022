@@ -118,7 +118,7 @@ public class CPTParam: InstrParam
 
 还可以**自行拓展**其他此参数类中需要的属性和字段，比如 `Type Dialogue Param` 就可以拓展一个 `Dialogue` 类以存放对话的姓名和内容。
 
-**<u>重要警告</u>**：`#region "These Properties MUSTn't Be Changed!"` 部分**一定不能随意更改**，更改后极大概率会影响序列化、反序列化、Frame Ex List的构造分配等功能的稳定性，导致在运行中报错。
+**<u>重要警告</u>**：`#region "These Properties MUSTn't Be Changed!"` 部分**一定不能随意更改**，更改后极大概率会影响序列化、反序列化、`Frame Ex List`的构造分配等功能的稳定性，导致在运行中报错。
 
 ### **2.3 指令执行 InstrExecute**
 
@@ -199,9 +199,9 @@ public class TypeDialogue: InstrExecute
 
 1. `void Start()` 和 `void Update()` 是 `InstrExecute` 作为 `Monobehaviour` 继承可使用的事件函数，但**不建议直接使用**这部分内容，指令执行主体在以下几个函数中。
 
-2. `void Init()` 会在 Frame Ex List 构造分配之后、Frame 执行之前执行。此函数会为执行器（`InstrExecute`）**分配引用的指令参数**（`InstrParam`），分配父对象，最后再执行函数内部的内容。`void Init()` 执行后，此执行器状态 `ExState` 会被设为 `Ready`；
+2. `void Init()` 会在 `Frame Ex List` 构造分配之后、`Frame` 执行之前执行。此函数会为执行器（`InstrExecute`）**分配引用的指令参数**（`InstrParam`），分配父对象，最后再执行函数内部的内容。`void Init()` 执行后，此执行器状态 `ExState` 会被设为 `Ready`；
 
-3. `void Execute()` 和 `IEnumerator CoExecute()` 在 Frame 执行时被一起调用，但二者具有**时序差异**，`void Execute()` 调用完成后才调用 `IEnumerator CoExecute()`。`void Execute()` 执行开始时，此执行器状态 `ExState` 会被设为 `Executing`；`IEnumerator CoExecute()` 执行完成后，自动将此执行器状态 `ExState` 会被设为 `Completed`。
+3. `void Execute()` 和 `IEnumerator CoExecute()` 在 `Frame` 执行时被一起调用，但二者具有**时序差异**，`void Execute()` 调用完成后才调用 `IEnumerator CoExecute()`。`void Execute()` 执行开始时，此执行器状态 `ExState` 会被设为 `Executing`；`IEnumerator CoExecute()` 执行完成后，自动将此执行器状态 `ExState` 会被设为 `Completed`。
 
 4. 在 `void Execute()` 执行开始、`IEnumerator CoExecute()` 未结束时（`Executing`），如果指令参数内表明**可以中断**（`IsCanBeSkipped`），那么用户可以输入调用 `void Interrupt()`，打断 `IEnumerator CoExecute()` 执行状态。此时执行器状态 `ExState` 会直接跳转为 `Completed`。
 
