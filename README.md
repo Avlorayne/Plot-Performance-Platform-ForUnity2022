@@ -81,9 +81,9 @@ graph LR
 
 在 `Window/Plot Editor` 中创建新的指令脚本。  
 ![img1](ScreenShot/fb8b6739-3d25-4f3f-860b-d17a5fcc1b2d.png)  
+![img4](ScreenShot/22410c89-3efb-4a4d-a79e-32d29955b320.png)
 ![img2](ScreenShot/ed29ca34-76bd-4510-9172-378827442689.png)  
 ![img3](ScreenShot/ce2ff3a7-f1ee-4e05-b827-5f7fbe98d020.png)  
-![img4](ScreenShot/22410c89-3efb-4a4d-a79e-32d29955b320.png)  
 新建的指令脚本会在 `Assets/Scripts/Plot Performance Platform ForUnity2022/Instruction/` 目录下，Unity会自动刷新资产索引。
 
 **指令脚本中的内容有两部分**：
